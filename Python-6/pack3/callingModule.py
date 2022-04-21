@@ -1,10 +1,10 @@
 #Importing the classes and Functions from different packages.
 import sys
-sys.path.append("/Users/sharath.bc/PycharmProjects/PythonPractice1/BasicsOfPython-6/pack1")
+sys.path.append("/Python-6/pack1")
 """import module1
 module1.dispaly()"""
 
-sys.path.append("/Users/sharath.bc/PycharmProjects/PythonPractice1/BasicsOfPython-6/pack2")
+sys.path.append("/Python-6/pack2")
 """import modle2
 module2.run()"""
 
