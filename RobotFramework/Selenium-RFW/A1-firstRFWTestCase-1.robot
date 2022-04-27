@@ -1,7 +1,7 @@
 *** Settings ***
 Documentation   Validate the login form
 Library         SeleniumLibrary
-Test Teardown       Close Browser #here we can write sentence and we can give the body.
+Test Teardown       Close Browser        #here we can write sentence and we can give the body.
 
 *** Variables ***
 ${base_url}     https://www.rahulshettyacademy.com/loginpagePractise/

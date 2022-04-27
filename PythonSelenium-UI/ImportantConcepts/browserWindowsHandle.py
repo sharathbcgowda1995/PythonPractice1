@@ -29,5 +29,29 @@ print("Child id is : ",child_window)
 #switch back to the parent window
 driver.switch_to.window(parent_window)
 
+#How to switch to the child_tab ??
+driver.switch_to.window(child_window)
+title = driver.title
+print(title)
+if title=="OrangeHRM HR Software | Free & Open Source HR Software | HRMS | HRIS":
+    print("I'm in child window now....")
+else:
+    print(driver.current_window_handle)
+
+#How to switch to the child_tab ??
+driver.switch_to.window(parent_window)
+
+#How to switch to the multiple browser windows.
+for win_id in mul_windowID:
+    driver.switch_to.window(win_id)
+    print(win_id.title())
+
+#How to close the specific browser window.
+for close_id in mul_windowID:
+    driver.switch_to.window(close_id)
+    if(driver.title=="OrangeHRM"):
+        driver.close()
+
+
 time.sleep(4)
-#driver.quit()
+driver.quit()

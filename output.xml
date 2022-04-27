@@ -1,151 +1,75 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<robot generator="Robot 5.0 (Python 3.10.4 on darwin)" generated="20220419 23:32:54.645" rpa="false" schemaversion="3">
-<suite id="s1" name="A11-pageObjectModel-11.robot" source="/Users/sharath.bc/PycharmProjects/PythonPractice1/RobotFramework/Selenium-RFW/A11-pageObjectModel-11.robot.robot">
-<test id="s1-t1" name="Validate the user unsuccessful login" line="14">
-<kw name="open the web page for the validation" library="LoginPage" type="SETUP">
-<kw name="Create Webdriver" library="SeleniumLibrary">
-<arg>Chrome</arg>
-<doc>Creates an instance of Selenium WebDriver.</doc>
-<msg timestamp="20220419 23:32:54.727" level="INFO">Creating an instance of the Chrome WebDriver.</msg>
-<status status="PASS" starttime="20220419 23:32:54.727" endtime="20220419 23:32:57.422"/>
-</kw>
-<kw name="Go To" library="SeleniumLibrary">
-<arg>${url}</arg>
-<doc>Navigates the current browser window to the provided ``url``.</doc>
-<msg timestamp="20220419 23:32:57.423" level="INFO">Opening url 'https://www.rahulshettyacademy.com/loginpagePractise/'</msg>
-<status status="PASS" starttime="20220419 23:32:57.422" endtime="20220419 23:32:57.771"/>
-</kw>
-<status status="PASS" starttime="20220419 23:32:54.727" endtime="20220419 23:32:57.771"/>
-</kw>
-<kw name="fill the login form" library="LoginPage">
+<robot generator="Robot 5.0 (Python 3.10.4 on darwin)" generated="20220427 23:42:03.083" rpa="false" schemaversion="3">
+<suite id="s1" name="First Rfw Api Automation" source="/Users/sharath.bc/PycharmProjects/PythonPractice1/RobotFramework/Requests-RFW/first_rfw_api_automation.robot">
+<test id="s1-t1" name="Retrieving all the user rented numbers." line="13">
+<kw name="Create List" library="BuiltIn">
+<var>${auth}</var>
 <arg>${user_name}</arg>
-<arg>${invalid_password}</arg>
-<kw name="Input Text" library="SeleniumLibrary">
-<arg>id:username</arg>
-<arg>${userName}</arg>
-<doc>Types the given ``text`` into the text field identified by ``locator``.</doc>
-<msg timestamp="20220419 23:32:57.772" level="INFO">Typing text 'rahulshettyacademy' into text field 'id:username'.</msg>
-<status status="PASS" starttime="20220419 23:32:57.772" endtime="20220419 23:32:57.846"/>
+<arg>${password}</arg>
+<doc>Returns a list containing given items.</doc>
+<msg timestamp="20220427 23:42:03.120" level="INFO">${auth} = ['MAYJLIZGQ5MWVKZWM4NZ', '= MjFkZjQ3MzhiODFlZmY4MjIyODk2NTgxOGVmMDdm']</msg>
+<status status="PASS" starttime="20220427 23:42:03.120" endtime="20220427 23:42:03.120"/>
 </kw>
-<kw name="Input Password" library="SeleniumLibrary">
-<arg>id:password</arg>
-<arg>${pwd}</arg>
-<doc>Types the given password into the text field identified by ``locator``.</doc>
-<msg timestamp="20220419 23:32:57.846" level="INFO">Typing password into text field 'id:password'.</msg>
-<msg timestamp="20220419 23:32:57.864" level="INFO">Temporally setting log level to: NONE</msg>
-<msg timestamp="20220419 23:32:57.881" level="INFO">Log level changed from NONE to INFO.</msg>
-<status status="PASS" starttime="20220419 23:32:57.846" endtime="20220419 23:32:57.881"/>
+<kw name="Create Session" library="RequestsLibrary">
+<arg>mysession</arg>
+<arg>${base_url}</arg>
+<arg>auth=${auth}</arg>
+<doc>Create Session: create a HTTP session to a server</doc>
+<msg timestamp="20220427 23:42:03.120" level="INFO">Creating Session using : alias=mysession, url=https://api.numbers.plivodev.com/v1/Account/MAYJLIZGQ5MWVKZWM4NZ, headers={},                     cookies={}, auth=&lt;requests.auth.HTTPBasicAuth object at 0x1029d9c60&gt;, timeout=None, proxies=None, verify=False,                     debug=0 </msg>
+<status status="PASS" starttime="20220427 23:42:03.120" endtime="20220427 23:42:03.120"/>
 </kw>
-<kw name="Click Button" library="SeleniumLibrary">
-<arg>signInBtn</arg>
-<doc>Clicks the button identified by ``locator``.</doc>
-<msg timestamp="20220419 23:32:57.882" level="INFO">Clicking button 'signInBtn'.</msg>
-<status status="PASS" starttime="20220419 23:32:57.881" endtime="20220419 23:32:57.908"/>
+<kw name="Get Request" library="RequestsLibrary">
+<var>${response}</var>
+<arg>mysession</arg>
+<arg>${endpoint}</arg>
+<doc>*DEPRECATED* Please use `GET On Session` instead.</doc>
+<msg timestamp="20220427 23:42:03.120" level="WARN">Keyword 'RequestsLibrary.Get Request' is deprecated. Please use `GET On Session` instead.</msg>
+<msg timestamp="20220427 23:42:04.267" level="INFO">GET Request : url=https://api.numbers.plivodev.com/v1/Account/MAYJLIZGQ5MWVKZWM4NZ/Number/ 
+ path_url=/v1/Account/MAYJLIZGQ5MWVKZWM4NZ/Number/ 
+ headers={'User-Agent': 'python-requests/2.27.1', 'Accept-Encoding': 'gzip, deflate', 'Accept': '*/*', 'Connection': 'keep-alive', 'Authorization': 'Basic TUFZSkxJWkdRNU1XVktaV000Tlo6PSBNakZrWmpRM016aGlPREZsWm1ZNE1qSXlPRGsyTlRneE9HVm1NRGRt'} 
+ body=None 
+ </msg>
+<msg timestamp="20220427 23:42:04.268" level="INFO">GET Response : url=https://api.numbers.plivodev.com/v1/Account/MAYJLIZGQ5MWVKZWM4NZ/Number/ 
+ status=503, reason=Service Temporarily Unavailable 
+ headers={'Server': 'awselb/2.0', 'Date': 'Wed, 27 Apr 2022 18:12:04 GMT', 'Content-Type': 'text/html', 'Content-Length': '162', 'Connection': 'keep-alive'} 
+ body=&lt;html&gt;
+&lt;head&gt;&lt;title&gt;503 Service Temporarily Unavailable&lt;/title&gt;&lt;/head&gt;
+&lt;body&gt;
+&lt;center&gt;&lt;h1&gt;503 Service Temporarily Unavailable&lt;/h1&gt;&lt;/center&gt;
+&lt;/body&gt;
+&lt;/html&gt;
+ 
+ </msg>
+<msg timestamp="20220427 23:42:04.268" level="INFO">/Library/Frameworks/Python.framework/Versions/3.10/lib/python3.10/site-packages/urllib3/connectionpool.py:1043: InsecureRequestWarning: Unverified HTTPS request is being made to host 'api.numbers.plivodev.com'. Adding certificate verification is strongly advised. See: https://urllib3.readthedocs.io/en/1.26.x/advanced-usage.html#ssl-warnings
+  warnings.warn(</msg>
+<msg timestamp="20220427 23:42:04.268" level="INFO">${response} = &lt;Response [503]&gt;</msg>
+<status status="PASS" starttime="20220427 23:42:03.120" endtime="20220427 23:42:04.268"/>
 </kw>
-<status status="PASS" starttime="20220419 23:32:57.771" endtime="20220419 23:32:57.908"/>
+<kw name="Log To Console" library="BuiltIn">
+<arg>${response.status_code}</arg>
+<doc>Logs the given message to the console.</doc>
+<status status="PASS" starttime="20220427 23:42:04.269" endtime="20220427 23:42:04.270"/>
 </kw>
-<kw name="wait until it finds" library="HomePage">
-<arg>${errorMsgLocator}</arg>
-<kw name="Wait Until Element Is Visible" library="SeleniumLibrary">
-<arg>${locator}</arg>
-<doc>Waits until the element ``locator`` is visible.</doc>
-<status status="PASS" starttime="20220419 23:32:57.908" endtime="20220419 23:32:59.933"/>
+<kw name="Log To Console" library="BuiltIn">
+<arg>${response.content}</arg>
+<doc>Logs the given message to the console.</doc>
+<status status="PASS" starttime="20220427 23:42:04.270" endtime="20220427 23:42:04.271"/>
 </kw>
-<status status="PASS" starttime="20220419 23:32:57.908" endtime="20220419 23:32:59.934"/>
-</kw>
-<kw name="verify the error message is correct" library="LoginPage">
-<kw name="Element Text Should Be" library="SeleniumLibrary">
-<arg>${errorMsgLocator}</arg>
-<arg>Incorrect username/password.</arg>
-<doc>Verifies that element ``locator`` contains exact the text ``expected``.</doc>
-<msg timestamp="20220419 23:32:59.934" level="INFO">Verifying element 'css:.alert-danger' contains exact text 'Incorrect username/password.'.</msg>
-<status status="PASS" starttime="20220419 23:32:59.934" endtime="20220419 23:32:59.951"/>
-</kw>
-<status status="PASS" starttime="20220419 23:32:59.934" endtime="20220419 23:32:59.952"/>
-</kw>
-<kw name="Close the current browser" library="LoginPage" type="TEARDOWN">
-<kw name="Close Browser" library="SeleniumLibrary">
-<doc>Closes the current browser.</doc>
-<status status="PASS" starttime="20220419 23:32:59.952" endtime="20220419 23:33:00.042"/>
-</kw>
-<status status="PASS" starttime="20220419 23:32:59.952" endtime="20220419 23:33:00.043"/>
-</kw>
-<status status="PASS" starttime="20220419 23:32:54.727" endtime="20220419 23:33:00.043"/>
+<status status="PASS" starttime="20220427 23:42:03.120" endtime="20220427 23:42:04.271"/>
 </test>
-<test id="s1-t2" name="Validate the user successful login" line="19">
-<kw name="open the web page for the validation" library="LoginPage" type="SETUP">
-<kw name="Create Webdriver" library="SeleniumLibrary">
-<arg>Chrome</arg>
-<doc>Creates an instance of Selenium WebDriver.</doc>
-<msg timestamp="20220419 23:33:00.044" level="INFO">Creating an instance of the Chrome WebDriver.</msg>
-<status status="PASS" starttime="20220419 23:33:00.043" endtime="20220419 23:33:02.640"/>
-</kw>
-<kw name="Go To" library="SeleniumLibrary">
-<arg>${url}</arg>
-<doc>Navigates the current browser window to the provided ``url``.</doc>
-<msg timestamp="20220419 23:33:02.641" level="INFO">Opening url 'https://www.rahulshettyacademy.com/loginpagePractise/'</msg>
-<status status="PASS" starttime="20220419 23:33:02.641" endtime="20220419 23:33:02.940"/>
-</kw>
-<status status="PASS" starttime="20220419 23:33:00.043" endtime="20220419 23:33:02.940"/>
-</kw>
-<kw name="fill the login form" library="LoginPage">
-<arg>${user_name}</arg>
-<arg>${valid_password}</arg>
-<kw name="Input Text" library="SeleniumLibrary">
-<arg>id:username</arg>
-<arg>${userName}</arg>
-<doc>Types the given ``text`` into the text field identified by ``locator``.</doc>
-<msg timestamp="20220419 23:33:02.941" level="INFO">Typing text 'rahulshettyacademy' into text field 'id:username'.</msg>
-<status status="PASS" starttime="20220419 23:33:02.941" endtime="20220419 23:33:03.015"/>
-</kw>
-<kw name="Input Password" library="SeleniumLibrary">
-<arg>id:password</arg>
-<arg>${pwd}</arg>
-<doc>Types the given password into the text field identified by ``locator``.</doc>
-<msg timestamp="20220419 23:33:03.015" level="INFO">Typing password into text field 'id:password'.</msg>
-<msg timestamp="20220419 23:33:03.033" level="INFO">Temporally setting log level to: NONE</msg>
-<msg timestamp="20220419 23:33:03.052" level="INFO">Log level changed from NONE to INFO.</msg>
-<status status="PASS" starttime="20220419 23:33:03.015" endtime="20220419 23:33:03.052"/>
-</kw>
-<kw name="Click Button" library="SeleniumLibrary">
-<arg>signInBtn</arg>
-<doc>Clicks the button identified by ``locator``.</doc>
-<msg timestamp="20220419 23:33:03.052" level="INFO">Clicking button 'signInBtn'.</msg>
-<status status="PASS" starttime="20220419 23:33:03.052" endtime="20220419 23:33:03.080"/>
-</kw>
-<status status="PASS" starttime="20220419 23:33:02.940" endtime="20220419 23:33:03.080"/>
-</kw>
-<kw name="wait until it finds" library="HomePage">
-<arg>${successfullLogin}</arg>
-<kw name="Wait Until Element Is Visible" library="SeleniumLibrary">
-<arg>${locator}</arg>
-<doc>Waits until the element ``locator`` is visible.</doc>
-<status status="PASS" starttime="20220419 23:33:03.080" endtime="20220419 23:33:51.212"/>
-</kw>
-<status status="PASS" starttime="20220419 23:33:03.080" endtime="20220419 23:33:51.212"/>
-</kw>
-<kw name="Close the current browser" library="LoginPage" type="TEARDOWN">
-<kw name="Close Browser" library="SeleniumLibrary">
-<doc>Closes the current browser.</doc>
-<status status="PASS" starttime="20220419 23:33:51.212" endtime="20220419 23:33:51.315"/>
-</kw>
-<status status="PASS" starttime="20220419 23:33:51.212" endtime="20220419 23:33:51.315"/>
-</kw>
-<status status="PASS" starttime="20220419 23:33:00.043" endtime="20220419 23:33:51.315"/>
-</test>
-<doc>Validate the login form</doc>
-<status status="PASS" starttime="20220419 23:32:54.646" endtime="20220419 23:33:51.316"/>
+<status status="PASS" starttime="20220427 23:42:03.085" endtime="20220427 23:42:04.272"/>
 </suite>
 <statistics>
 <total>
-<stat pass="2" fail="0" skip="0">All Tests</stat>
+<stat pass="1" fail="0" skip="0">All Tests</stat>
 </total>
 <tag>
 </tag>
 <suite>
-<stat pass="2" fail="0" skip="0" id="s1" name="A11-pageObjectModel-11.robot">A11-pageObjectModel-11.robot</stat>
+<stat pass="1" fail="0" skip="0" id="s1" name="First Rfw Api Automation">First Rfw Api Automation</stat>
 </suite>
 </statistics>
 <errors>
+<msg timestamp="20220427 23:42:03.120" level="WARN">Keyword 'RequestsLibrary.Get Request' is deprecated. Please use `GET On Session` instead.</msg>
 </errors>
 </robot>
