@@ -1,8 +1,8 @@
 #Modules are python files there we can define the Functions , methods and classes.
 print("--------Method-1 To access the functions from the different module------------")
 import ModulesOfPython #ModulesOfPython is a python file which contails functions
-ModulesOfPython.add(2,3)
-ModulesOfPython.sub(5,2)
+ModulesOfPython.add(2, 3)
+ModulesOfPython.sub(5, 2)
 
 print("--------Method-2 To access the functions from the different module------------")
 from ModulesOfPython import add,sub
@@ -15,7 +15,6 @@ add(1,2)
 sub(5,2)
 
 print("--------Method-4 To access the functions from the different module with same methods in each module------------")
-from Birds import *
 from Animal import *
 eat()#the method will be picked from the very recently imported module if both module has the same functions.
 
@@ -34,7 +33,7 @@ print(dir(modulesMultipleClasses))
 
 modulesMultipleClasses.Birds().fly()
 
-a=modulesMultipleClasses.Animal()
+a= modulesMultipleClasses.Animal()
 a.eat()
 
 #Type-2
