@@ -1371,3 +1371,26 @@ delete from persons where gender=‘male’ and country=‘China’; — deletes
 
 delete from tab_name where coulom_name=col_value and col_name=col_value;
 
+##UPDATE :
+- IF WE DON'T USE THE WHERE CLAUSE THEN THAT WILL UPDATE ALL THE COULMNS AND THE QUERY IS AS BELOW.
+[update persons set email = 'sharath@gmail.com';]
+
+-HENECE WE USE THE WHERE CLAUSE TO UPDATE THE SPECIFIC DATA.
+practice=# update persons set email = 'sharath@gmail.com' where id=21;
+UPDATE 1
+
+practice=# select * from persons where id=21;
+ id | first_name | last_name | gender |    dob     |       email       | country
+----+------------+-----------+--------+------------+-------------------+---------
+ 21 | Reinaldos  | Axup      | Male   | 2021-06-25 | sharath@gmail.com | Brazil
+(1 row)
+
+-WE CAN UPDATE THE MULPTIPLE COLUMNS OF THE SAME ROW DATA AS BELOW.
+practice=# update persons set first_name='Sharath' , last_name='Gowda',dob='1995-11-21' where id=21;
+UPDATE 1
+
+practice=# select * from persons where id=21;
+ id | first_name | last_name | gender |    dob     |       email       | country
+----+------------+-----------+--------+------------+-------------------+---------
+ 21 | Sharath    | Gowda     | Male   | 1995-11-21 | sharath@gmail.com | Brazil
+(1 row)
