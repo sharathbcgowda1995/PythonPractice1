@@ -1394,3 +1394,207 @@ practice=# select * from persons where id=21;
 ----+------------+-----------+--------+------------+-------------------+---------
  21 | Sharath    | Gowda     | Male   | 1995-11-21 | sharath@gmail.com | Brazil
 (1 row)
+
+##ON CONFLICT(CONSTRAINT_COL_NAME) DO NOTHING:
+
+-we get the errors like duplication while inserting the records to the table that time we candle those exception as below
+-we should only pass the constraint columns in the on conflict(--)
+
+practice=# insert into persons (id, first_name, last_name, gender, dob, email, country) values (1, 'Valera', 'Hardstaff', 'Male', '2022-01-02', null, 'Croatia');
+ERROR:  duplicate key value violates unique constraint "persons_pkey"
+DETAIL:  Key (id)=(1) already exists.
+
+practice=# insert into persons (id, first_name, last_name, gender, dob, email, country) values (1, 'Valera', 'Hardstaff', 'Male', '2022-01-02', null, 'Croatia') on conflict(id) do nothing;
+INSERT 0 0
+
+practice=# select * from persons where id=1;
+ id | first_name | last_name | gender |    dob     | email | country
+----+------------+-----------+--------+------------+-------+---------
+  1 | Valera     | Hardstaff | Hello  | 2022-01-02 |       | Croatia
+(1 row)
+
+-IF WE USE THE UNCONSTRAINT COL IN THE ON CONFLICT (--) WE GET THE BELOW ERROR:
+practice=# insert into persons (id, first_name, last_name, gender, dob, email, country) values (1, 'Valera', 'Hardstaff', 'Male', '2022-01-02', null, 'Croatia') on conflict(first_name) do nothing;
+ERROR:  there is no unique or exclusion constraint matching the ON CONFLICT specification
+
+##UPSERT :
+
+- it simply works like the update using where clause.
+
+practice=# insert into persons (id, first_name, last_name, gender, dob, email, country) values (1, 'Valera', 'Hardstaff', 'Male', '2022-01-02', 'sharathbc@gmail.com', 'India') on conflict(id) do update set email=excluded.email,country=excluded.country;
+INSERT 0 1
+
+practice=# select * from persons where id=1;
+ id | first_name | last_name | gender |    dob     |        email        | country
+----+------------+-----------+--------+------------+---------------------+---------
+  1 | Valera     | Hardstaff | Hello  | 2022-01-02 | sharathbc@gmail.com | India
+(1 row)
+
+-if we want we can update only one field as well.
+insert into persons (id, first_name, last_name, gender, dob, email, country) values (1, 'Valera', 'Hardstaff', 'Male', '2022-01-02', 'sharathbc@gmail.com', 'India') on conflict(id) do update set email=excluded.email;
+
+##FORIEGN_KEY :
+- foriegn key has below 3 rules.
+    1. it will point to PK of other table.
+    2. FK and PK of other table data type should be same.
+    3. create the table as below and first create the dependent table where we point the FK to PK
+
+table 1:person_d
+create table persons_d (id BIGSERIAL NOT NULL PRIMARY KEY,first_name VARCHAR(50),last_name VARCHAR(50),gender VARCHAR(50),
+dob DATE,email VARCHAR(50),country VARCHAR(50),car_id BIGINT REFERENCES car_d(id),UNIQUE(car_id));
+
+table 2:car-d
+create table car_d(
+	id BIGSERIAL NOT NULL PRIMARY KEY,
+	make VARCHAR(100),
+	model VARCHAR(100),
+	price NUMERIC(19,2) NOT NULL);
+
+-----Insertion to the persons_d
+insert into persons_d (id, first_name, last_name, gender, dob, email, country) values (1,'Valera', 'Hardstaff', 'Female', '2022-01-02', null, 'Croatia');
+insert into persons_d (id, first_name, last_name, gender, dob, email, country) values (2,'Melisent', 'McCleod', 'Female', '2021-06-26', null, 'China');
+
+-----Insertion to the car_d
+insert into car_d(make,model,price) values('Honda','2022-05-01',2000000);
+insert into car_d(make,model,price) values('VW','2021-01-01',2200000);
+
+#upadting the foriegn key
+-Foriegn key should have the unique values and ince assigned values can't be assigned to other records.
+
+practice=# update persons_d set car_id=2 where id=1;
+UPDATE 1
+
+practice=# select * from persons_d;
+ id | first_name | last_name | gender |    dob     | email | country | car_id
+----+------------+-----------+--------+------------+-------+---------+--------
+  2 | Melisent   | McCleod   | Female | 2021-06-26 |       | China   |
+  1 | Valera     | Hardstaff | Female | 2022-01-02 |       | Croatia |      2
+(2 rows)
+
+-Foriegn key should have the unique values and ince assigned values can't be assigned to other records.
+practice=# update persons_d set car_id=2 where id=2;
+ERROR:  duplicate key value violates unique constraint "persons_d_car_id_key"
+DETAIL:  Key (car_id)=(2) already exists.
+
+--Assigned the unique id present in car_d table.
+practice=# update persons_d set car_id=1 where id=2;
+UPDATE 1
+practice=# select * from persons_d;
+ id | first_name | last_name | gender |    dob     | email | country | car_id
+----+------------+-----------+--------+------------+-------+---------+--------
+  1 | Valera     | Hardstaff | Female | 2022-01-02 |       | Croatia |      2
+  2 | Melisent   | McCleod   | Female | 2021-06-26 |       | China   |      1
+(2 rows)
+
+--If we try to add the id to which is not in the car_d table to the person in persons_d table?
+
+practice=# update persons_d set car_id=3 where id=2;
+ERROR:  insert or update on table "persons_d" violates foreign key constraint "persons_d_car_id_fkey"
+DETAIL:  Key (car_id)=(3) is not present in table "car_d".
+
+##INNER JOIN :
+-- it will work if the two tables having relation of FK and PK .
+-- It will add those records which are having relation as mentioned above, if any of the record doesn't have any FK entry then
+that won't be considered.
+--For the BIGSERIAL data type if we dont pass the value in insertion and if we keep on executing the same query then that will be get executed from
+the beginning till the value which is free as below.
+
+practice=# insert into persons_d (first_name, last_name, gender, dob, email, country) values ('Nag', 'T M', 'Female', '1996-09-16', null, 'India');
+ERROR:  duplicate key value violates unique constraint "persons_d_pkey"
+DETAIL:  Key (id)=(1) already exists.
+practice=# insert into persons_d (first_name, last_name, gender, dob, email, country) values ('Nag', 'T M', 'Female', '1996-09-16', null, 'India');
+ERROR:  duplicate key value violates unique constraint "persons_d_pkey"
+DETAIL:  Key (id)=(2) already exists.
+practice=# insert into persons_d (first_name, last_name, gender, dob, email, country) values ('Nag', 'T M', 'Female', '1996-09-16', null, 'India');
+INSERT 0 1
+
+-- 3rd id was assigned then the records as below and we haven't updated the FK for this record intentionally to shows the joins.
+
+practice=# select * from persons_d;
+ id | first_name | last_name | gender |    dob     | email | country | car_id
+----+------------+-----------+--------+------------+-------+---------+--------
+  1 | Valera     | Hardstaff | Female | 2022-01-02 |       | Croatia |      2
+  2 | Melisent   | McCleod   | Female | 2021-06-26 |       | China   |      1
+  3 | Nag        | T M       | Female | 1996-09-16 |       | India   |
+(3 rows)
+
+--Performed the join and the records which were having the relation of FK and PK data are performed as below.
+
+practice=# select * from persons_d join car_d on persons_d.car_id=car_d.id;
+ id | first_name | last_name | gender |    dob     | email | country | car_id | id | make  |   model    |   price
+----+------------+-----------+--------+------------+-------+---------+--------+----+-------+------------+------------
+  2 | Melisent   | McCleod   | Female | 2021-06-26 |       | China   |      1 |  1 | Honda | 2022-05-01 | 2000000.00
+  1 | Valera     | Hardstaff | Female | 2022-01-02 |       | Croatia |      2 |  2 | VW    | 2021-01-01 | 2200000.00
+(2 rows)
+
+-- to view the data in different way then we can use \x:
+practice=# \x
+Expanded display is on.
+
+practice=# select * from persons_d join car_d on persons_d.car_id=car_d.id;
+-[ RECORD 1 ]----------
+id         | 2
+first_name | Melisent
+last_name  | McCleod
+gender     | Female
+dob        | 2021-06-26
+email      |
+country    | China
+car_id     | 1
+id         | 1
+make       | Honda
+model      | 2022-05-01
+price      | 2000000.00
+-[ RECORD 2 ]----------
+id         | 1
+first_name | Valera
+last_name  | Hardstaff
+gender     | Female
+dob        | 2022-01-02
+email      |
+country    | Croatia
+car_id     | 2
+id         | 2
+make       | VW
+model      | 2021-01-01
+price      | 2200000.00
+
+##SELECTION OF THE NEEDED COLUMNS USING JOIN AS BELOW :
+practice=# select persons_d.first_name , car_d.make from persons_d join car_d on persons_d.car_id=car_d.id;
+ first_name | make
+------------+-------
+ Melisent   | Honda
+ Valera     | VW
+(2 rows)
+
+---to turn off the display view in diff way is turned off.
+practice=# \x
+Expanded display is off.
+
+##LEFT JOIN :
+--It gives the both matching and unmatching records or the record which has no FK and PK data in it as below.
+--here the id 3 has no car_id but that still retrived in left join .
+
+practice=# select * from persons_d;
+ id | first_name | last_name | gender |    dob     | email | country | car_id
+----+------------+-----------+--------+------------+-------+---------+--------
+  1 | Valera     | Hardstaff | Female | 2022-01-02 |       | Croatia |      2
+  2 | Melisent   | McCleod   | Female | 2021-06-26 |       | China   |      1
+  3 | Nag        | T M       | Female | 1996-09-16 |       | India   |
+(3 rows)
+
+practice=# select * from persons_d left join car_d on persons_d.id=car_d.id;
+ id | first_name | last_name | gender |    dob     | email | country | car_id | id | make  |   model    |   price
+----+------------+-----------+--------+------------+-------+---------+--------+----+-------+------------+------------
+  1 | Valera     | Hardstaff | Female | 2022-01-02 |       | Croatia |      2 |  1 | Honda | 2022-05-01 | 2000000.00
+  2 | Melisent   | McCleod   | Female | 2021-06-26 |       | China   |      1 |  2 | VW    | 2021-01-01 | 2200000.00
+  3 | Nag        | T M       | Female | 1996-09-16 |       | India   |        |    |       |            |
+(3 rows)
+
+---Below query gives the record where the FK column has no data in it.
+
+practice=# select * from persons_d left join car_d on persons_d.id=car_d.id where car_d.* is null;
+ id | first_name | last_name | gender |    dob     | email | country | car_id | id | make | model | price
+----+------------+-----------+--------+------------+-------+---------+--------+----+------+-------+-------
+  3 | Nag        | T M       | Female | 1996-09-16 |       | India   |        |    |      |       |
+(1 row)
