@@ -1598,3 +1598,249 @@ practice=# select * from persons_d left join car_d on persons_d.id=car_d.id wher
 ----+------------+-----------+--------+------------+-------+---------+--------+----+------+-------+-------
   3 | Nag        | T M       | Female | 1996-09-16 |       | India   |        |    |      |       |
 (1 row)
+
+
+#HOW TO DELETE THE RECORDS WITH FORIENGN KEYS ?
+-First del or unlink the foriegn key relationship with table record
+-Then try to delete the record which pointed to FK.
+
+practice=# select * from persons_d;
+ id | first_name | last_name | gender |    dob     | email | country | car_id
+----+------------+-----------+--------+------------+-------+---------+--------
+  1 | Valera     | Hardstaff | Female | 2022-01-02 |       | Croatia |      2
+  2 | Melisent   | McCleod   | Female | 2021-06-26 |       | China   |      1
+  3 | Nag        | T M       | Female | 1996-09-16 |       | India   |
+(3 rows)
+
+practice=# delete from car_d where id=2;
+ERROR:  update or delete on table "car_d" violates foreign key constraint "persons_d_car_id_fkey" on table "persons_d"
+DETAIL:  Key (id)=(2) is still referenced from table "persons_d".
+
+-After removing the relationshop with FK record.
+practice=# delete from car_d where id =2;
+DELETE 0
+
+## How to copy the query execution results in file in .csv format.
+practice=# practice=# \copy (select * from persons_d left join car_d on car_d.id=persons_d.car_id) to '/Users/sharath.bc/Desktop/result.csv' delimiter ',' csv header;
+COPY 3
+
+## BIGINT and BIGSERIAL :
+
+practice=# \d persons_d;
+                                     Table "public.persons_d"
+   Column   |         Type          | Collation | Nullable |                Default
+------------+-----------------------+-----------+----------+---------------------------------------
+ id         | bigint                |           | not null | nextval('persons_d_id_seq'::regclass)
+ first_name | character varying(50) |           |          |
+ last_name  | character varying(50) |           |          |
+ gender     | character varying(50) |           |          |
+ dob        | date                  |           |          |
+ email      | character varying(50) |           |          |
+ country    | character varying(50) |           |          |
+ car_id     | bigint                |           |          |
+Indexes:
+    "persons_d_pkey" PRIMARY KEY, btree (id)
+    "persons_d_car_id_key" UNIQUE CONSTRAINT, btree (car_id)
+Foreign-key constraints:
+    "persons_d_car_id_fkey" FOREIGN KEY (car_id) REFERENCES car_d(id)
+
+#To see details of bigint column status :
+practice=# select * from persons_d_id_seq;
+ last_value | log_cnt | is_called
+------------+---------+-----------
+          3 |      30 | t
+(1 row)
+
+practice=# select * from persons_d;
+ id | first_name | last_name | gender |    dob     | email | country | car_id
+----+------------+-----------+--------+------------+-------+---------+--------
+  1 | Valera     | Hardstaff | Female | 2022-01-02 |       | Croatia |      2
+  2 | Melisent   | McCleod   | Female | 2021-06-26 |       | China   |      1
+  3 | Nag        | T M       | Female | 1996-09-16 |       | India   |
+(3 rows)
+
+# To increase that data type column value by executing the below value.
+practice=# select nextval('persons_d_id_seq'::regclass);
+ nextval
+---------
+       4
+(1 row)
+
+practice=# select nextval('persons_d_id_seq'::regclass);
+ nextval
+---------
+       5
+(1 row)
+
+practice=# select nextval('persons_d_id_seq'::regclass);
+ nextval
+---------
+       6
+(1 row)
+
+# we can reset the bigint data type column val to some specific value.
+practice=# alter sequence persons_d_id_seq restart with 10;
+ALTER SEQUENCE
+
+# if we add the records after the above query execution it will add the data from that resetted number
+practice=# insert into persons_d(first_name,last_name,gender,dob,email,country) values('Lonely','Boy','Male','2022-05-03','lonely@broken.com','India');
+INSERT 0 1
+
+practice=# select * from persons_d;
+ id | first_name | last_name | gender |    dob     |       email       | country | car_id
+----+------------+-----------+--------+------------+-------------------+---------+--------
+  1 | Valera     | Hardstaff | Female | 2022-01-02 |                   | Croatia |      2
+  2 | Melisent   | McCleod   | Female | 2021-06-26 |                   | China   |      1
+  3 | Nag        | T M       | Female | 1996-09-16 |                   | India   |
+ 10 | Lonely     | Boy       | Male   | 2022-05-03 | lonely@broken.com | India   |
+(5 rows)
+
+
+##EXTENSIONS :
+
+-We have several extensions for our use.
+-To check the options for the some options where we can find the pg_available_extensions.
+select * from pg_a;#its actually not working.
+
+-To see all the exetensions.
+practice=# select * from pg_available_extensions;
+             name             | default_version | installed_version |                                                       comment
+------------------------------+-----------------+-------------------+---------------------------------------------------------------------------------------------------------------------
+ refint                       | 1.0             |                   | functions for implementing referential integrity (obsolete)
+ postgis                      | 3.1.5           |                   | PostGIS geometry and geography spatial types and functions
+ unaccent                     | 1.1             |                   | text search dictionary that removes accents
+ btree_gin                    | 1.3             |                   | support for indexing common datatypes in GIN
+ plpython3u                   | 1.0             |                   | PL/Python3U untrusted procedural language
+ ltree                        | 1.2             |                   | data type for hierarchical tree-like structures
+ tsm_system_rows              | 1.0             |                   | TABLESAMPLE method which accepts number of rows as a limit
+ ltree_plpythonu              | 1.0             |                   | transform between ltree and plpythonu
+ adminpack                    | 2.1             |                   | administrative functions for PostgreSQL
+ dict_xsyn                    | 1.0             |                   | text search dictionary template for extended synonym processing
+ address_standardizer         | 3.1.5           |                   | Used to parse an address into constituent elements. Generally used to support geocoding address normalization step.
+ xml2                         | 1.1             |                   | XPath querying and XSLT
+ hstore                       | 1.8             |                   | data type for storing sets of (key, value) pairs
+ pg_visibility                | 1.2             |                   | examine the visibility map (VM) and page-level visibility info
+ cube                         | 1.5             |                   | data type for multidimensional cubes
+ postgis_tiger_geocoder       | 3.1.5           |                   | PostGIS tiger geocoder and reverse geocoder
+ seg                          | 1.4             |                   | data type for representing line segments or floating-point intervals
+ intagg                       | 1.1             |                   | integer aggregator and enumerator (obsolete)
+ tcn                          | 1.0             |                   | Triggered change notifications
+ isn                          | 1.2             |                   | data types for international product numbering standards
+ tsm_system_time              | 1.0             |                   | TABLESAMPLE method which accepts time in milliseconds as a limit
+ lo                           | 1.1             |                   | Large Object maintenance
+ pgrowlocks                   | 1.2             |                   | show row-level locking information
+ jsonb_plpython2u             | 1.0             |                   | transform between jsonb and plpython2u
+ jsonb_plpython3u             | 1.0             |                   | transform between jsonb and plpython3u
+ sslinfo                      | 1.2             |                   | information about SSL certificates
+ pgstattuple                  | 1.5             |                   | show tuple-level statistics
+ autoinc                      | 1.0             |                   | functions for autoincrementing fields
+ address_standardizer_data_us | 3.1.5           |                   | Address Standardizer US dataset example
+ hstore_plpython3u            | 1.0             |                   | transform between hstore and plpython3u
+ hstore_plpython2u            | 1.0             |                   | transform between hstore and plpython2u
+ postgis_topology             | 3.1.5           |                   | PostGIS topology spatial types and functions
+ postgis_raster               | 3.1.5           |                   | PostGIS raster types and functions
+ pg_freespacemap              | 1.2             |                   | examine the free space map (FSM)
+ file_fdw                     | 1.0             |                   | foreign-data wrapper for flat file access
+ pg_surgery                   | 1.0             |                   | extension to perform surgery on a damaged relation
+ pg_buffercache               | 1.3             |                   | examine the shared buffer cache
+ dblink                       | 1.2             |                   | connect to other PostgreSQL databases from within a database
+ pg_stat_statements           | 1.9             |                   | track planning and execution statistics of all SQL statements executed
+ insert_username              | 1.0             |                   | functions for tracking who changed a table
+ pg_prewarm                   | 1.2             |                   | prewarm relation data
+ old_snapshot                 | 1.0             |                   | utilities in support of old_snapshot_threshold
+ earthdistance                | 1.1             |                   | calculate great-circle distances on the surface of the Earth
+ uuid-ossp                    | 1.1             |                   | generate universally unique identifiers (UUIDs)
+ intarray                     | 1.5             |                   | functions, operators, and index support for 1-D arrays of integers
+ pg_trgm                      | 1.6             |                   | text similarity measurement and index searching based on trigrams
+ dict_int                     | 1.0             |                   | text search dictionary template for integers
+ amcheck                      | 1.3             |                   | functions for verifying relation integrity
+ jsonb_plpythonu              | 1.0             |                   | transform between jsonb and plpythonu
+ btree_gist                   | 1.6             |                   | support for indexing common datatypes in GiST
+ pageinspect                  | 1.9             |                   | inspect the contents of database pages at a low level
+ moddatetime                  | 1.0             |                   | functions for tracking last modification time
+ fuzzystrmatch                | 1.1             |                   | determine similarities and distance between strings
+ ltree_plpython3u             | 1.0             |                   | transform between ltree and plpython3u
+ ltree_plpython2u             | 1.0             |                   | transform between ltree and plpython2u
+ pldbgapi                     | 1.1             |                   | server-side support for debugging PL/pgSQL functions
+ pgcrypto                     | 1.3             |                   | cryptographic functions
+ tablefunc                    | 1.0             |                   | functions that manipulate whole tables, including crosstab
+ postgres_fdw                 | 1.1             |                   | foreign-data wrapper for remote PostgreSQL servers
+ bloom                        | 1.0             |                   | bloom access method - signature file based index
+ hstore_plpythonu             | 1.0             |                   | transform between hstore and plpythonu
+ citext                       | 1.6             |                   | data type for case-insensitive character strings
+ plpgsql                      | 1.0             | 1.0               | PL/pgSQL procedural language
+(63 rows)
+
+--To install the extensions :
+practice=# create extension if not exists "uuid-ossp";
+CREATE EXTENSION
+
+--To check whether the extension has been added or not run the below query and chck the installed version column
+practice=# select * from pg_available_extensions;
+             name             | default_version | installed_version |                                                       comment
+------------------------------+-----------------+-------------------+---------------------------------------------------------------------------------------------------------------------
+ refint                       | 1.0             |                   | functions for implementing referential integrity (obsolete)
+ postgis                      | 3.1.5           |                   | PostGIS geometry and geography spatial types and functions
+ unaccent                     | 1.1             |                   | text search dictionary that removes accents
+ btree_gin                    | 1.3             |                   | support for indexing common datatypes in GIN
+ plpython3u                   | 1.0             |                   | PL/Python3U untrusted procedural language
+ ltree                        | 1.2             |                   | data type for hierarchical tree-like structures
+ tsm_system_rows              | 1.0             |                   | TABLESAMPLE method which accepts number of rows as a limit
+ ltree_plpythonu              | 1.0             |                   | transform between ltree and plpythonu
+ adminpack                    | 2.1             |                   | administrative functions for PostgreSQL
+ dict_xsyn                    | 1.0             |                   | text search dictionary template for extended synonym processing
+ address_standardizer         | 3.1.5           |                   | Used to parse an address into constituent elements. Generally used to support geocoding address normalization step.
+ xml2                         | 1.1             |                   | XPath querying and XSLT
+ hstore                       | 1.8             |                   | data type for storing sets of (key, value) pairs
+ pg_visibility                | 1.2             |                   | examine the visibility map (VM) and page-level visibility info
+ cube                         | 1.5             |                   | data type for multidimensional cubes
+ postgis_tiger_geocoder       | 3.1.5           |                   | PostGIS tiger geocoder and reverse geocoder
+ seg                          | 1.4             |                   | data type for representing line segments or floating-point intervals
+ intagg                       | 1.1             |                   | integer aggregator and enumerator (obsolete)
+ tcn                          | 1.0             |                   | Triggered change notifications
+ isn                          | 1.2             |                   | data types for international product numbering standards
+ tsm_system_time              | 1.0             |                   | TABLESAMPLE method which accepts time in milliseconds as a limit
+ lo                           | 1.1             |                   | Large Object maintenance
+ pgrowlocks                   | 1.2             |                   | show row-level locking information
+ jsonb_plpython2u             | 1.0             |                   | transform between jsonb and plpython2u
+ jsonb_plpython3u             | 1.0             |                   | transform between jsonb and plpython3u
+ sslinfo                      | 1.2             |                   | information about SSL certificates
+ pgstattuple                  | 1.5             |                   | show tuple-level statistics
+ autoinc                      | 1.0             |                   | functions for autoincrementing fields
+ address_standardizer_data_us | 3.1.5           |                   | Address Standardizer US dataset example
+ hstore_plpython3u            | 1.0             |                   | transform between hstore and plpython3u
+ hstore_plpython2u            | 1.0             |                   | transform between hstore and plpython2u
+ postgis_topology             | 3.1.5           |                   | PostGIS topology spatial types and functions
+ postgis_raster               | 3.1.5           |                   | PostGIS raster types and functions
+ pg_freespacemap              | 1.2             |                   | examine the free space map (FSM)
+ file_fdw                     | 1.0             |                   | foreign-data wrapper for flat file access
+ pg_surgery                   | 1.0             |                   | extension to perform surgery on a damaged relation
+ pg_buffercache               | 1.3             |                   | examine the shared buffer cache
+ dblink                       | 1.2             |                   | connect to other PostgreSQL databases from within a database
+ pg_stat_statements           | 1.9             |                   | track planning and execution statistics of all SQL statements executed
+ insert_username              | 1.0             |                   | functions for tracking who changed a table
+ pg_prewarm                   | 1.2             |                   | prewarm relation data
+ old_snapshot                 | 1.0             |                   | utilities in support of old_snapshot_threshold
+ earthdistance                | 1.1             |                   | calculate great-circle distances on the surface of the Earth
+ uuid-ossp                    | 1.1             | 1.1               | generate universally unique identifiers (UUIDs)
+ intarray                     | 1.5             |                   | functions, operators, and index support for 1-D arrays of integers
+ pg_trgm                      | 1.6             |                   | text similarity measurement and index searching based on trigrams
+ dict_int                     | 1.0             |                   | text search dictionary template for integers
+ amcheck                      | 1.3             |                   | functions for verifying relation integrity
+ jsonb_plpythonu              | 1.0             |                   | transform between jsonb and plpythonu
+ btree_gist                   | 1.6             |                   | support for indexing common datatypes in GiST
+ pageinspect                  | 1.9             |                   | inspect the contents of database pages at a low level
+ moddatetime                  | 1.0             |                   | functions for tracking last modification time
+ fuzzystrmatch                | 1.1             |                   | determine similarities and distance between strings
+ ltree_plpython3u             | 1.0             |                   | transform between ltree and plpython3u
+ ltree_plpython2u             | 1.0             |                   | transform between ltree and plpython2u
+ pldbgapi                     | 1.1             |                   | server-side support for debugging PL/pgSQL functions
+ pgcrypto                     | 1.3             |                   | cryptographic functions
+ tablefunc                    | 1.0             |                   | functions that manipulate whole tables, including crosstab
+ postgres_fdw                 | 1.1             |                   | foreign-data wrapper for remote PostgreSQL servers
+ bloom                        | 1.0             |                   | bloom access method - signature file based index
+ hstore_plpythonu             | 1.0             |                   | transform between hstore and plpythonu
+ citext                       | 1.6             |                   | data type for case-insensitive character strings
+ plpgsql                      | 1.0             | 1.0               | PL/pgSQL procedural language
+(63 rows)
+
