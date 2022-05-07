@@ -88,12 +88,36 @@ s.meth(1,2)
 
 #VVVVIMMMMPPPP
 #calling parent class constructor from the child class.
-#1.if child and parent doensn't have the constructor then that is not aproblem
-#2.if parent has const and child has no const then we have to class the parent const in child class
-#3.if child has const and parent has const then we can call any one i.e fine
 #Note : parent class const should always be called inside the child class const or child class meth
+
+#if child and parent doensn't have the constructor then that is not a problem
 #case 1
 print("----case..1------")
+class x :
+    a=10
+    
+
+class y(x):
+        print(super().a)
+
+yobj = y()
+
+
+#case 2
+print("----case..2------")
+class x :
+    a=10
+    def __init__(self):
+        print("Parent const--")
+
+class y(x):
+        print(super().a)
+
+yobj = y() #zero parametrised parent const will be get called from child obj creation
+
+#if child has const and parent has const then we can call any one i.e fine
+#case 3
+print("----case..3------")
 class x :
     a=10
     def __init__(self):
@@ -105,12 +129,11 @@ class y(x):
         super().__init__()
         print(super().a)
 
-yobj = y()
+yobj = y() #zero parametrised child const is called.
 
-print("----case..2------")
-#case 2
-#4.if parent constructor has params and then while creating child obj we have
-#--- to pass the required args for parent constructor
+print("----case..4------")
+#case 4
+#if parent constructor with params and child has no const , then while creating child obj we have to pass the required args for parent constructor
 class x :
     a=10
     def __init__(self,var):
@@ -123,8 +146,9 @@ class y(x):
 yobj = y(10)
 yobj.m()
 
-print("----case..3------")
-#case 3 :
+print("----case..5------")
+#if child has parametrised const and parent also has const then we can call any one i.e fine
+#case 5 :
 #here as we can see I can't overload the constructor we can have only one constructor in python
 #if we have overloaded also the latest written constructor will be picked.
 #so that first two parent constructors are commented out.
@@ -139,12 +163,12 @@ class x :
         print("Parent const3--")
 
 class y(x):
-    def __init__(self):
+    def __init__(self,var):
         print("Child const---")
     def m(self):
         super().__init__(10,10,10)
 
-yobj = y()
+yobj = y(4)
 yobj.m()
 
 
