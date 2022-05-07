@@ -152,6 +152,8 @@ print("----case..5------")
 #here as we can see I can't overload the constructor we can have only one constructor in python
 #if we have overloaded also the latest written constructor will be picked.
 #so that first two parent constructors are commented out.
+#when the child class has the constructor then we should not actually call the parent class constructor for child obj creation 
+#--i.e not even possible also but that's possible when the child has no constructor.
 class x :
     a=10
     """def __init__(self,var):
