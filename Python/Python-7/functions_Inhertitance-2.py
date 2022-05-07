@@ -86,6 +86,68 @@ class Subclass(Myclass):
 s=Subclass()
 s.meth(1,2)
 
+#VVVVIMMMMPPPP
+#calling parent class constructor from the child class.
+#1.if child and parent doensn't have the constructor then that is not aproblem
+#2.if parent has const and child has no const then we have to class the parent const in child class
+#3.if child has const and parent has const then we can call any one i.e fine
+#Note : parent class const should always be called inside the child class const or child class meth
+#case 1
+print("----case..1------")
+class x :
+    a=10
+    def __init__(self):
+        print("Parent const--")
+
+class y(x):
+    def __init__(self):
+        print("Child constr")
+        super().__init__()
+        print(super().a)
+
+yobj = y()
+
+print("----case..2------")
+#case 2
+#4.if parent constructor has params and then while creating child obj we have
+#--- to pass the required args for parent constructor
+class x :
+    a=10
+    def __init__(self,var):
+        print("Parent const--")
+
+class y(x):
+    def m(self):
+        super().__init__(10)
+
+yobj = y(10)
+yobj.m()
+
+print("----case..3------")
+#case 3 :
+#here as we can see I can't overload the constructor we can have only one constructor in python
+#if we have overloaded also the latest written constructor will be picked.
+#so that first two parent constructors are commented out.
+class x :
+    a=10
+    """def __init__(self,var):
+        print("Parent const1--")
+    def __init__(self,var,var1):
+        print("Parent const2--")"""
+    
+    def __init__(self,var,var1,var2):
+        print("Parent const3--")
+
+class y(x):
+    def __init__(self):
+        print("Child const---")
+    def m(self):
+        super().__init__(10,10,10)
+
+yobj = y()
+yobj.m()
+
+
 
 
 
