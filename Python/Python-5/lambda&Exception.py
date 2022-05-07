@@ -56,3 +56,14 @@ except valueError :
     print("Enter the positive number")
 except :
     print("Something is wrong...")#we can write the except kw alone as above."""
+
+
+# using exception objects.
+
+try :
+
+    name = one #its string but not defined
+
+except NameError as ex :
+
+    print(ex)
