@@ -183,6 +183,82 @@ obj=x(10)
 print(obj.a)
 
 
+##------------------------------------------------------------------------##
+
+#Practice program with basic of constructor initialization and variables.
+class Employee:
+    def __init__(self,id,name,salary):
+        self.id=id
+        self.name=name
+        self.salary=salary
+
+    def show(self):
+        print("id:{},name:{},sal:{}".format(self.id,self.name,self.salary))
+
+empobj = Employee(1,'Sharath',1.6)
+empobj.show()
+
+
+#__str__
+#case..1
+print("case1-----")
+#It is always getting called when we actually print the ref varibale
+#we can also override this as per our need
+class StringMethCheck:
+    pass
+
+s= StringMethCheck()
+print(s) # now actually __str__ is called
+
+
+#case..2
+print("case2-----")
+class StringMethCheck:
+    def __str__(self):
+        return 'Method over ridden'
+
+s= StringMethCheck()
+print(s) # now actually __str__ is called but it's here now over ridden
+
+#If we return anything other than string after overriding the __str__ we will get error
+#case..3
+print("case3-----")
+class StringMethCheck:
+    def __str__(self):
+        #return 1 #TypeError: __str__ returned non-string (type int)
+        return 'I dont return othen than string'
+
+s= StringMethCheck()
+print(s) # now actually __str__ is called but it's here now over ridden
+
+#case..4
+print("----case..4----")
+#Most of the time we use it to print the instance variabled by over riding it
+class Employee:
+    def __init__(self,id,name,salary):
+        self.id=id
+        self.name=name
+        self.salary=salary
+
+    def __str__(self):
+        print("id:{},name:{},sal:{}".format(self.id,self.name,self.salary))
+        return 'Method overridden'  #if we don't specify this we will get --- TypeError: __str__ returned non-string (type NoneType)
+
+empobj = Employee(1,'Sharath',1.6)
+print(empobj)
+
+
+####__del__
+#This method will be __del__ get called when we destroy the obj explicitly but if we want then we can over ride that method as below.
+print("----Deleting object------")
+class DeleteObject :
+    def __del__(self):
+        print(".....Object destroyed....")
+
+d1 = DeleteObject()
+d2 = DeleteObject()
+del d1 #now the __del__ will be called internally but here it will call the above customised one
+
 
 
 
