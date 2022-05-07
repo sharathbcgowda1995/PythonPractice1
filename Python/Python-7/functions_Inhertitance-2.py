@@ -174,6 +174,15 @@ yobj = y(4)
 yobj.m()
 
 
+#if a class has the customised constructor then while object creation you have to pass the same.
+class x:
+    a=10
+    def __init__(self,var):
+        pass
+obj=x(10)
+print(obj.a)
+
+
 
 
 
