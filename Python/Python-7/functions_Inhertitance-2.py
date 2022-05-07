@@ -32,6 +32,38 @@ print(c.learn2())
 print(c.learn3(4,3))
 print(c.learn4(),type(c.learn4()))
 
+#----------------------------#
+
+#If we use return in the mid of any logic then that will be get returned to the place from where it has been called.
+class x :
+    def meth(self,start,end):
+        if start>end:
+            print("Always pass the strt value smaller than the end value")
+            return #it will stop the excution of this method and will go back to the mathod from where it has been called.
+        for i in range(start,end):
+            print(i)
+
+d= x()
+d.meth(11,10)
+print("--I have returned back here for furhter execution---")
+
+#---------------------------#
+
+# considering above example , we can't use the break/continue stmt outside the for loop  or while loop 
+class x :
+    def meth(self,start,end):
+        if start>end:
+            print("Always pass the strt value smaller than the end value")
+            #break/continue #we will get the error as - SyntaxError: 'break' outside loop
+        for i in range(start,end):
+            print(i)
+
+d= x()
+d.meth(11,10)
+print("--I have returned back here for furhter execution---")
+
+
+#----------------------------------#
 
 #Passing arguement to the method
 print("--------Passing arguement to the method [method-1.positional argument]-------")
@@ -258,7 +290,5 @@ class DeleteObject :
 d1 = DeleteObject()
 d2 = DeleteObject()
 del d1 #now the __del__ will be called internally but here it will call the above customised one
-
-
 
 
